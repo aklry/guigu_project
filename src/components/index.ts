@@ -2,8 +2,7 @@
 import SvgIcon from './SvgIcon/index.vue'
 //全局组件对象
 const allGlobalComponent = {
-  SvgIcon,
-  Pagination,
+  SvgIcon
 }
 //对外暴露一个插件
 export default {

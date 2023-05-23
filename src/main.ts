@@ -9,6 +9,8 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import 'virtual:svg-icons-register'
 //引入自定义插件:注册整个项目的全局组件
 import globalComponent from '@/components/index.ts'
+//引入模板的全局样式
+import '@/styles/index.scss'
 const app = createApp(App)
 //将应用挂载到挂载点
 app.use(ElementPlus, {

@@ -23,7 +23,8 @@
     "axios": "^1.4.0",
     "element-plus": "^2.3.5",
     "vite-plugin-mock": "2.0.0",
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "vue-router": "^4.2.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.21.8",

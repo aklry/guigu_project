@@ -7,9 +7,13 @@ import 'element-plus/dist/index.css'
 //配置element-plus国际化
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import 'virtual:svg-icons-register'
+//引入自定义插件:注册整个项目的全局组件
+import globalComponent from '@/components/index.ts'
 const app = createApp(App)
 //将应用挂载到挂载点
 app.use(ElementPlus, {
   locale: zhCn, //element-plus国际化配置
 })
+//安装自定义插件
+app.use(globalComponent)
 app.mount('#app')

@@ -13,6 +13,8 @@ import globalComponent from '@/components/index.ts'
 import '@/styles/index.scss'
 //引入路由
 import router from './router'
+//引入仓库
+import store from './store'
 const app = createApp(App)
 //将应用挂载到挂载点
 app.use(ElementPlus, {
@@ -21,4 +23,5 @@ app.use(ElementPlus, {
 //安装自定义插件
 app.use(globalComponent)
 app.use(router)
+app.use(store)
 app.mount('#app')

@@ -40,6 +40,8 @@ import { reactive, ref } from 'vue'
 import { userStore } from '@/store/modules/user.ts'
 import { useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'
+//引入登录时间函数
+import { getTime } from '@/utils/time'
 //收集账号与密码数据
 let loginForm = reactive({
   username: '',
@@ -62,7 +64,8 @@ const loginHandle = async () => {
     router.push('/')
     ElNotification({
       type: 'success',
-      message: '登录成功',
+      message: '欢迎回来',
+      title: `HI,${getTime()}好`,
     })
     loading.value = false
   } catch (error) {

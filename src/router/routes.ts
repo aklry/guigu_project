@@ -7,7 +7,7 @@ export const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/views/home/index.vue'),
+    component: () => import('@/components/Layout/index.vue'),
   },
   {
     path: '/404',

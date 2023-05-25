@@ -5,10 +5,13 @@ import { reqLogin } from '@/api/user'
 import type { loginForm, loginResponseData } from '@/api/user/type'
 import type { UserState } from './types/type'
 import { SET_TOKEN, GET_TOKEN } from '@/utils/token'
+//引入路由(常量路由)
+import { routes } from '@/router/routes'
 export const userStore = defineStore('User', {
   state: (): UserState => {
     return {
       token: GET_TOKEN(), //用户唯一标识
+      menuRoutes: routes, //仓库存储动态生成的路由
     }
   },
   actions: {

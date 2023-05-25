@@ -1,5 +1,11 @@
 <template>
-  <el-button type="default" size="small" icon="Refresh" circle @click="refreshHandle" />
+  <el-button
+    type="default"
+    size="small"
+    icon="Refresh"
+    circle
+    @click="refreshHandle"
+  />
   <el-button type="default" size="small" icon="FullScreen" circle />
   <el-button type="default" size="small" icon="setting" circle />
   <img

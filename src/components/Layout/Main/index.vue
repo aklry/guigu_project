@@ -16,13 +16,16 @@ import { watch, ref, nextTick } from 'vue'
 let flag = ref(true)
 const useSettingStore = settingStore()
 //监听仓库内部的数据是否发生变化,如果发生变化，说明用户点击过刷新按钮
-watch(() => useSettingStore.refresh, () => {
-  //点击刷新按钮，路由组件销毁
-  flag.value = false
-  nextTick(() => {
-    flag.value = true
-  })
-})
+watch(
+  () => useSettingStore.refresh,
+  () => {
+    //点击刷新按钮，路由组件销毁
+    flag.value = false
+    nextTick(() => {
+      flag.value = true
+    })
+  },
+)
 </script>
 <script lang="ts">
 export default {

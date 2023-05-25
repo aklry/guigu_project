@@ -4,6 +4,7 @@ export const settingStore = defineStore('setting', {
   state: () => {
     return {
       fold: false, //控制菜单是否折叠
+      refresh: false, //控制是否刷新
     }
   },
 })

@@ -7,7 +7,12 @@
       <!-- 滚动组件 -->
       <el-scrollbar class="scrollbar">
         <!-- 菜单组件 -->
-        <el-menu background-color="#001529" text-color="#fff" router :default-active="route.path">
+        <el-menu
+          background-color="#001529"
+          text-color="#fff"
+          router
+          :default-active="route.path"
+        >
           <!-- 根据路由动态生成菜单 -->
           <Menu :menuList="useUserStore.menuRoutes" />
         </el-menu>

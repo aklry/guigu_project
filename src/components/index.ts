@@ -4,7 +4,7 @@ import SvgIcon from './SvgIcon/index.vue'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 //全局组件对象
 const allGlobalComponent: any = {
-  SvgIcon
+  SvgIcon,
 }
 //对外暴露一个插件
 export default {

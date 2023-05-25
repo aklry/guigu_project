@@ -7,14 +7,16 @@
       <!-- 滚动组件 -->
       <el-scrollbar class="scrollbar">
         <!-- 菜单组件 -->
-        <el-menu background-color="#001529" text-color="#fff" router>
+        <el-menu background-color="#001529" text-color="#fff" router :default-active="route.path">
           <!-- 根据路由动态生成菜单 -->
           <Menu :menuList="useUserStore.menuRoutes" />
         </el-menu>
       </el-scrollbar>
     </div>
     <!-- 顶部导航 -->
-    <div class="layout_tabbar"></div>
+    <div class="layout_tabbar">
+      <Tabbar />
+    </div>
     <!-- 内容展示区域 -->
     <div class="layout_main">
       <Main />
@@ -28,9 +30,15 @@ import Logo from './Logo/index.vue'
 import Menu from './Menu/index.vue'
 //引入右侧内容展示区域组件
 import Main from './Main/index.vue'
+//引入顶部tabbar
+import Tabbar from './Tabbar/index.vue'
 //获取用户相关仓库
 import { userStore } from '@/store/modules/user'
+import { useRoute } from 'vue-router'
 const useUserStore = userStore()
+
+//获取路由对象
+const route = useRoute()
 </script>
 
 <style lang="scss" scoped>

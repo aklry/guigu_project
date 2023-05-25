@@ -13,7 +13,11 @@
 import Left from './Left/index.vue'
 import Right from './Right/index.vue'
 </script>
-
+<script lang="ts">
+export default {
+  name: 'Tabbar',
+}
+</script>
 <style lang="scss" scoped>
 .tabbar {
   display: flex;
@@ -30,10 +34,6 @@ import Right from './Right/index.vue'
     display: flex;
     align-items: center;
     margin-left: 20px;
-
-    .el-icon {
-      margin-right: 10px;
-    }
   }
 
   .tabbar_right {

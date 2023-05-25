@@ -1,13 +1,17 @@
 <template>
   <div class="layout_container">
     <!-- 左侧菜单 -->
-    <div class="layout_slider">
+    <div
+      class="layout_slider"
+      :class="{ fold: useSettingStore.fold ? true : false }"
+    >
       <Logo />
       <!-- 展示菜单 -->
       <!-- 滚动组件 -->
       <el-scrollbar class="scrollbar">
         <!-- 菜单组件 -->
         <el-menu
+          :collapse="useSettingStore.fold ? true : false"
           background-color="#001529"
           text-color="#fff"
           router
@@ -19,11 +23,17 @@
       </el-scrollbar>
     </div>
     <!-- 顶部导航 -->
-    <div class="layout_tabbar">
+    <div
+      class="layout_tabbar"
+      :class="{ fold: useSettingStore.fold ? true : false }"
+    >
       <Tabbar />
     </div>
     <!-- 内容展示区域 -->
-    <div class="layout_main">
+    <div
+      class="layout_main"
+      :class="{ fold: useSettingStore.fold ? true : false }"
+    >
       <Main />
     </div>
   </div>
@@ -39,13 +49,18 @@ import Main from './Main/index.vue'
 import Tabbar from './Tabbar/index.vue'
 //获取用户相关仓库
 import { userStore } from '@/store/modules/user'
+import { settingStore } from '@/store/modules/setting'
 import { useRoute } from 'vue-router'
 const useUserStore = userStore()
-
+const useSettingStore = settingStore()
 //获取路由对象
 const route = useRoute()
 </script>
-
+<script lang="ts">
+export default {
+  name: 'Layout',
+}
+</script>
 <style lang="scss" scoped>
 @import '@/styles/variable.scss';
 
@@ -57,12 +72,19 @@ const route = useRoute()
     width: $sliderWidth;
     height: 100vh;
     background-color: $sliderBackgroundColor;
+    transition: width 0.3s;
+
     .scrollbar {
       width: 100%;
       height: calc(100vh - $sliderLogoHeight);
+
       .el-menu {
         border-right: none;
       }
+    }
+
+    &.fold {
+      width: $sliderMinWidth;
     }
   }
 
@@ -72,6 +94,11 @@ const route = useRoute()
     height: $tabbarHeight;
     top: 0;
     left: $sliderWidth;
+    transition: all 0.3s;
+    &.fold {
+      width: calc(100vw - $sliderMinWidth);
+      left: $sliderMinWidth;
+    }
   }
 
   .layout_main {
@@ -82,6 +109,11 @@ const route = useRoute()
     left: $sliderWidth;
     padding: 20px;
     overflow: auto;
+    transition: all 0.3s;
+    &.fold {
+      width: calc(100vw - $sliderMinWidth);
+      left: $sliderMinWidth;
+    }
   }
 }
 </style>

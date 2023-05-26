@@ -16,6 +16,8 @@ import router from './router'
 //引入仓库
 import store from './store'
 const app = createApp(App)
+//引入路由鉴权文件
+import './permission'
 //将应用挂载到挂载点
 app.use(ElementPlus, {
   locale: zhCn, //element-plus国际化配置

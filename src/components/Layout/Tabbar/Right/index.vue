@@ -15,13 +15,13 @@
   />
   <el-button type="default" size="small" icon="setting" circle />
   <img
-    src="../../../../../public/logo.png"
-    style="width: 24px; height: 24px; margin: 0 10px"
+    :src="useUserStore.avatar"
+    style="width: 24px; height: 24px; margin: 0 10px; border-radius: 50%"
   />
   <!-- 退出登录 下拉菜单 -->
   <el-dropdown>
     <span class="el-dropdown-link">
-      admin
+      {{ useUserStore.username }}
       <el-icon class="el-icon--right">
         <arrow-down />
       </el-icon>
@@ -36,6 +36,9 @@
 
 <script setup lang="ts">
 import { settingStore } from '@/store/modules/setting'
+//引入存储用户相关信息的仓库
+import { userStore } from '@/store/modules/user'
+const useUserStore = userStore()
 const useSettingStore = settingStore()
 const refreshHandle = () => {
   useSettingStore.refresh = !useSettingStore.refresh

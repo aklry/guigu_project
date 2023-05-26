@@ -102,12 +102,8 @@ const loginHandle = async () => {
   try {
     //保证登录成功
     await useUserStore.userLogin(loginForm)
-    if (route.query) {
-      let redirect: any = route.query.redirect
-      router.push(redirect)
-    } else {
-      router.push('/')
-    }
+    let redirect: any = route.query.redirect
+    router.push({ path: redirect || '/' })
     ElNotification({
       type: 'success',
       message: '欢迎回来',

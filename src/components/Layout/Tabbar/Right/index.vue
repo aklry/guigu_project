@@ -6,7 +6,7 @@
     circle
     @click="refreshHandle"
   />
-  <el-button type="default" size="small" icon="FullScreen" circle />
+  <el-button type="default" size="small" icon="FullScreen" circle @click="fullScreenHandle" />
   <el-button type="default" size="small" icon="setting" circle />
   <img
     src="../../../../../public/logo.png"
@@ -31,9 +31,21 @@
 <script setup lang="ts">
 import { settingStore } from '@/store/modules/setting'
 const useSettingStore = settingStore()
-//刷新按钮
 const refreshHandle = () => {
   useSettingStore.refresh = !useSettingStore.refresh
+}
+//实现全屏模式
+const fullScreenHandle = () => {
+  //判断当前屏幕是不是全屏
+  let full = document.fullscreenElement //null -> 非全屏
+  //切换全屏模式
+  if (!full) {
+    //文档根节点requestFullscreen,实现全屏
+    document.documentElement.requestFullscreen()
+  } else {
+    //退出全屏
+    document.exitFullscreen()
+  }
 }
 </script>
 <script lang="ts">

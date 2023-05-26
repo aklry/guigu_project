@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 //引入接口
-import { reqLogin } from '@/api/user'
+import { reqLogin, reqUserInfo } from '@/api/user'
 //引入数据类型
 import type { loginForm, loginResponseData } from '@/api/user/type'
 import type { UserState } from './types/type'
@@ -11,7 +11,9 @@ export const userStore = defineStore('User', {
   state: (): UserState => {
     return {
       token: GET_TOKEN(), //用户唯一标识
-      menuRoutes: routes, //仓库存储动态生成的路由
+      menuRoutes: routes, //仓库存储动态生成的路由,
+      username: '', //用户姓名,
+      avatar: '', //用户头像
     }
   },
   actions: {
@@ -30,6 +32,16 @@ export const userStore = defineStore('User', {
         return 'ok'
       } else {
         return Promise.reject(new Error(result.data.message))
+      }
+    },
+    //获取用户信息
+    async getUserInfo() {
+      let result = await reqUserInfo()
+      //如果获取用户信息成功，存储一下
+      if (result.code === 200) {
+        this.username = result.data.checkUser.username
+        this.avatar = result.data.checkUser.avatar
+      } else {
       }
     },
   },

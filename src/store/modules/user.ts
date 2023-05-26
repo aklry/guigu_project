@@ -4,7 +4,7 @@ import { reqLogin, reqUserInfo } from '@/api/user'
 //引入数据类型
 import type { loginForm, loginResponseData } from '@/api/user/type'
 import type { UserState } from './types/type'
-import { SET_TOKEN, GET_TOKEN } from '@/utils/token'
+import { SET_TOKEN, GET_TOKEN, REMOVE_TOKEN } from '@/utils/token'
 //引入路由(常量路由)
 import { routes } from '@/router/routes'
 export const userStore = defineStore('User', {
@@ -43,6 +43,13 @@ export const userStore = defineStore('User', {
         this.avatar = result.data.checkUser.avatar
       } else {
       }
+    },
+    //退出登录
+    userLogout() {
+      //退出登录接口(通知服务器本地用户唯一标识失效)
+      this.token = ''
+      ;(this.username = ''), (this.avatar = '')
+      REMOVE_TOKEN()
     },
   },
   getters: {},

@@ -6,7 +6,13 @@
     circle
     @click="refreshHandle"
   />
-  <el-button type="default" size="small" icon="FullScreen" circle @click="fullScreenHandle" />
+  <el-button
+    type="default"
+    size="small"
+    icon="FullScreen"
+    circle
+    @click="fullScreenHandle"
+  />
   <el-button type="default" size="small" icon="setting" circle />
   <img
     src="../../../../../public/logo.png"

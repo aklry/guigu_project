@@ -61,10 +61,10 @@ const fullScreenHandle = () => {
   }
 }
 //退出登录
-const logoutHandle = () => {
+const logoutHandle = async () => {
   //第一件事情: 向服务器发送请求
   //第二件事情: 清空仓库中用户的有关信息
-  useUserStore.userLogout()
+  await useUserStore.userLogout()
   //第三件事情: 跳转到登录页面
   router.push({
     name: 'Login',

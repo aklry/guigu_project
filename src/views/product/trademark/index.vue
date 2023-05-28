@@ -54,17 +54,24 @@
     <el-dialog v-model="dialogFormVisible" title="添加品牌">
       <el-form style="width: 80%">
         <el-form-item label="品牌名称" label-width="80">
-          <el-input placeholder="请您输入品牌名称" />
+          <el-input
+            placeholder="请您输入品牌名称"
+            v-model="trademarkParams.tmName"
+          />
         </el-form-item>
         <el-form-item label="品牌LOGO" label-width="80">
           <el-upload
             class="avatar-uploader"
-            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+            action="/api/admin/product/fileUpload"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <img
+              v-if="trademarkParams.logoUrl"
+              :src="trademarkParams.logoUrl"
+              class="avatar"
+            />
             <el-icon v-else class="avatar-uploader-icon">
               <Plus />
             </el-icon>
@@ -82,13 +89,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { reqHasTrademark } from '@/api/product/trademark/index.ts'
+import { ref, onMounted, reactive } from 'vue'
+import {
+  reqHasTrademark,
+  reqAddOrUpdateTrademark,
+} from '@/api/product/trademark/index.ts'
 //引入数据类型
 import type {
   Records,
   TrademarkResponseData,
+  hasTrademark,
 } from '@/api/product/trademark/type'
+import type { UploadProps } from 'element-plus'
+import { ElMessage } from 'element-plus'
 
 //当前页码
 let currentPage = ref<number>(1)
@@ -102,6 +115,11 @@ let total = ref<number>(0)
 let trademarkArr = ref<Records>([])
 //定义控制对话框组件的显示与隐藏
 let dialogFormVisible = ref<boolean>(false)
+//定义收集新增品牌数据
+let trademarkParams = reactive<hasTrademark>({
+  tmName: '',
+  logoUrl: '',
+})
 //获取已有品牌数据
 const getHasTradeMark = async (page = 1) => {
   currentPage.value = page
@@ -132,14 +150,52 @@ const pageSizeChange = () => {
 //添加品牌按钮
 const addTrademarkHandle = () => {
   dialogFormVisible.value = true
+  //将收集的表单数据清空
+  trademarkParams.logoUrl = ''
+  trademarkParams.tmName = ''
 }
 const editTrademarkHandle = () => {
   dialogFormVisible.value = true
 }
 //对话框底部确认按钮
-const confirmSubmitHandle = () => {
-  //对话框隐藏
-  dialogFormVisible.value = false
+const confirmSubmitHandle = async () => {
+  let result = await reqAddOrUpdateTrademark(trademarkParams)
+  if (result.code === 200) {
+    //对话框隐藏
+    dialogFormVisible.value = false
+    ElMessage.success(`添加品牌${result.message}成功`)
+    getHasTradeMark()
+  } else {
+    ElMessage.error('添加品牌失败')
+  }
+}
+
+//上传文件前触发的钩子函数
+const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+  //要求上传图片格式 png|jpg|gif 4M
+  if (
+    rawFile.type === 'image/jpeg' ||
+    rawFile.type === 'image/png' ||
+    rawFile.type === 'image/gif'
+  ) {
+    if (rawFile.size / 1024 / 1024 < 4) {
+      return true
+    } else {
+      ElMessage.error('上传文件大小必须小于4M')
+    }
+  } else {
+    ElMessage.error('图片格式必须为jpg|png|gif')
+    return false
+  }
+  return true
+}
+//上传文件成功时触发的钩子函数
+const handleAvatarSuccess: UploadProps['onSuccess'] = (
+  //response: 即服务器返回的数据
+  response,
+  uploadFile,
+) => {
+  trademarkParams.logoUrl = response.data
 }
 </script>
 

@@ -31,7 +31,15 @@
               icon="Edit"
               @click="editTrademarkHandle(row)"
             />
-            <el-button size="small" type="danger" icon="Delete" />
+            <el-popconfirm
+              :title="`您确定要删除${row.tmName}这个品牌吗?`"
+              width="200"
+              @confirm="confirmDeleteHandle(row.id)"
+            >
+              <template #reference>
+                <el-button size="small" type="danger" icon="Delete" />
+              </template>
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -101,6 +109,7 @@ import { ref, onMounted, reactive, nextTick } from 'vue'
 import {
   reqHasTrademark,
   reqAddOrUpdateTrademark,
+  reqDeleteTrademark,
 } from '@/api/product/trademark/index.ts'
 //引入数据类型
 import type {
@@ -174,6 +183,7 @@ const addTrademarkHandle = () => {
     formRef.value.clearValidate('logoUrl')
   })
 }
+//编辑按钮
 const editTrademarkHandle = (row: hasTrademark) => {
   //展示已有品牌数据
   // trademarkParams.tmName = row.tmName
@@ -201,6 +211,18 @@ const confirmSubmitHandle = async () => {
     ElMessage.error(`${trademarkParams.id ? '修改品牌失败' : '添加品牌失败'}`)
     //对话框隐藏
     dialogFormVisible.value = false
+  }
+}
+//气泡框确认删除按钮
+const confirmDeleteHandle = async (id: number) => {
+  let result = await reqDeleteTrademark(id)
+  if (result.code === 200) {
+    ElMessage.success('删除成功')
+    getHasTradeMark(
+      trademarkArr.value.length > 1 ? currentPage.value : currentPage.value - 1,
+    )
+  } else {
+    ElMessage.error('删除失败')
   }
 }
 

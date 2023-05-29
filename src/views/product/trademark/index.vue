@@ -55,14 +55,19 @@
       v-model="dialogFormVisible"
       :title="trademarkParams.id ? '修改品牌' : '添加品牌'"
     >
-      <el-form style="width: 80%">
-        <el-form-item label="品牌名称" label-width="80">
+      <el-form
+        :model="trademarkParams"
+        :rules="rules"
+        style="width: 80%"
+        ref="formRef"
+      >
+        <el-form-item label="品牌名称" label-width="100" prop="tmName">
           <el-input
             placeholder="请您输入品牌名称"
             v-model="trademarkParams.tmName"
           />
         </el-form-item>
-        <el-form-item label="品牌LOGO" label-width="80">
+        <el-form-item label="品牌LOGO" label-width="100" prop="logoUrl">
           <el-upload
             class="avatar-uploader"
             action="/api/admin/product/fileUpload"
@@ -92,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, nextTick } from 'vue'
 import {
   reqHasTrademark,
   reqAddOrUpdateTrademark,
@@ -123,6 +128,8 @@ let trademarkParams = reactive<hasTrademark>({
   tmName: '',
   logoUrl: '',
 })
+//获取表单DOM元素
+let formRef = ref()
 //获取已有品牌数据
 const getHasTradeMark = async (page = 1) => {
   currentPage.value = page
@@ -157,6 +164,15 @@ const addTrademarkHandle = () => {
   trademarkParams.logoUrl = ''
   trademarkParams.tmName = ''
   trademarkParams.id = 0
+
+  //清除校验字段(第一种写法)
+  // formRef.value?.clearValidate('tmName')
+  // formRef.value?.clearValidate('logoUrl')
+  //清除校验字段(第二种写法)
+  nextTick(() => {
+    formRef.value.clearValidate('tmName')
+    formRef.value.clearValidate('logoUrl')
+  })
 }
 const editTrademarkHandle = (row: hasTrademark) => {
   //展示已有品牌数据
@@ -165,9 +181,16 @@ const editTrademarkHandle = (row: hasTrademark) => {
   // trademarkParams.id = row.id
   Object.assign(trademarkParams, row)
   dialogFormVisible.value = true
+  //清空校验规则错误信息
+  nextTick(() => {
+    formRef.value.clearValidate('tmName')
+    formRef.value.clearValidate('logoUrl')
+  })
 }
 //对话框底部确认按钮(添加|修改品牌)
 const confirmSubmitHandle = async () => {
+  //在发请求之前对整个表单进行校验
+  await formRef.value.validate()
   let result = await reqAddOrUpdateTrademark(trademarkParams)
   if (result.code === 200) {
     ElMessage.success(`${trademarkParams.id ? '修改品牌成功' : '添加品牌成功'}`)
@@ -207,6 +230,28 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (
   uploadFile,
 ) => {
   trademarkParams.logoUrl = response.data
+  formRef.value.clearValidate()
+}
+//自定义校验规则方法
+const validateTmName = (rule: any, value: any, callback: any) => {
+  if (value.trim().length >= 2) {
+    callback()
+  } else {
+    //校验未通过
+    callback(new Error('品牌名称位数大于等于两位'))
+  }
+}
+const validateLogoUrl = (rule: any, value: any, callback: any) => {
+  if (value) {
+    callback()
+  } else {
+    callback(new Error('logo图片务必上传'))
+  }
+}
+//表单校验规则对象
+const rules = {
+  tmName: [{ required: true, trigger: 'blur', validator: validateTmName }],
+  logoUrl: [{ required: true, trigger: 'blur', validator: validateLogoUrl }],
 }
 </script>
 

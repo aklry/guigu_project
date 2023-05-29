@@ -29,7 +29,7 @@
               type="primary"
               size="small"
               icon="Edit"
-              @click="editTrademarkHandle"
+              @click="editTrademarkHandle(row)"
             />
             <el-button size="small" type="danger" icon="Delete" />
           </template>
@@ -51,7 +51,10 @@
       />
     </el-card>
     <!-- 对话框组件：用于添加品牌与修改品牌 -->
-    <el-dialog v-model="dialogFormVisible" title="添加品牌">
+    <el-dialog
+      v-model="dialogFormVisible"
+      :title="trademarkParams.id ? '修改品牌' : '添加品牌'"
+    >
       <el-form style="width: 80%">
         <el-form-item label="品牌名称" label-width="80">
           <el-input
@@ -153,20 +156,28 @@ const addTrademarkHandle = () => {
   //将收集的表单数据清空
   trademarkParams.logoUrl = ''
   trademarkParams.tmName = ''
+  trademarkParams.id = 0
 }
-const editTrademarkHandle = () => {
+const editTrademarkHandle = (row: hasTrademark) => {
+  //展示已有品牌数据
+  // trademarkParams.tmName = row.tmName
+  // trademarkParams.logoUrl = row.logoUrl
+  // trademarkParams.id = row.id
+  Object.assign(trademarkParams, row)
   dialogFormVisible.value = true
 }
-//对话框底部确认按钮
+//对话框底部确认按钮(添加|修改品牌)
 const confirmSubmitHandle = async () => {
   let result = await reqAddOrUpdateTrademark(trademarkParams)
   if (result.code === 200) {
+    ElMessage.success(`${trademarkParams.id ? '修改品牌成功' : '添加品牌成功'}`)
+    getHasTradeMark(trademarkParams.id ? currentPage.value : 1)
     //对话框隐藏
     dialogFormVisible.value = false
-    ElMessage.success(`添加品牌${result.message}成功`)
-    getHasTradeMark()
   } else {
-    ElMessage.error('添加品牌失败')
+    ElMessage.error(`${trademarkParams.id ? '修改品牌失败' : '添加品牌失败'}`)
+    //对话框隐藏
+    dialogFormVisible.value = false
   }
 }
 

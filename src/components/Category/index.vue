@@ -57,7 +57,7 @@ onMounted(() => {
 const changeCategory2Handle = () => {
   //清空二级、三级分类的数据
   useCategoryStore.c2Id = ''
-  useCategoryStore.c2Data = []
+  useCategoryStore.c3Data = []
   useCategoryStore.c3Id = ''
   useCategoryStore.getC2()
 }

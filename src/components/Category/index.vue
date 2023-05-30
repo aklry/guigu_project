@@ -6,6 +6,7 @@
           <el-select
             v-model="useCategoryStore.c1Id"
             @change="changeCategory2Handle"
+            :disabled="scene === 0 ? false : true"
           >
             <!-- label:展示的数据 value:select收集的数据 -->
             <el-option
@@ -20,6 +21,7 @@
           <el-select
             v-model="useCategoryStore.c2Id"
             @change="changeCategory3Handle"
+            :disabled="scene === 0 ? false : true"
           >
             <el-option
               v-for="[key, value] of Object.entries(useCategoryStore.c2Data)"
@@ -30,7 +32,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="三级分类">
-          <el-select v-model="useCategoryStore.c3Id">
+          <el-select
+            v-model="useCategoryStore.c3Id"
+            :disabled="scene === 0 ? false : true"
+          >
             <el-option
               v-for="[key, value] of Object.entries(useCategoryStore.c3Data)"
               :label="value.name"
@@ -65,6 +70,8 @@ const changeCategory3Handle = () => {
   useCategoryStore.c3Id = ''
   useCategoryStore.getC3()
 }
+
+defineProps(['scene'])
 </script>
 
 <style scoped></style>

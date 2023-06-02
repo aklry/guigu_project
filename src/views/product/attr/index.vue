@@ -72,17 +72,26 @@
             type="index"
           ></el-table-column>
           <el-table-column label="属性值名称">
-            <template #="{ row }">
+            <template #="{ row, $index }">
               <!-- row即为当前属性值对象 -->
               <el-input
                 placeholder="请你输入属性值名称"
                 v-model="row.valueName"
+                v-if="row.flag"
+                @blur="toLook(row, $index)"
               />
+              <div @click="toEdit(row)" v-else>{{ row.valueName }}</div>
             </template>
           </el-table-column>
           <el-table-column label="属性值操作"></el-table-column>
         </el-table>
-        <el-button type="primary" @click="saveHandle">保存</el-button>
+        <el-button
+          type="primary"
+          @click="saveHandle"
+          :disabled="attrParams.attrValueList.length > 0 ? false : true"
+        >
+          保存
+        </el-button>
         <el-button type="default" @click="cancel">取消</el-button>
       </div>
     </el-card>
@@ -92,7 +101,12 @@
 <script setup lang="ts">
 import { watch, ref, reactive } from 'vue'
 import { categoryStore } from '@/store/modules/category'
-import type { AttrResponseData, AttrList, Attr } from '@/api/product/attr/type'
+import type {
+  AttrResponseData,
+  AttrList,
+  Attr,
+  AttrValue,
+} from '@/api/product/attr/type'
 //引入获取已有属性与属性值接口
 import { reqAttr, reqAddOrUpdateAttr } from '@/api/product/attr'
 import { ElMessage } from 'element-plus'
@@ -150,6 +164,7 @@ const addAttrValueHandle = () => {
   //当点击添加属性值的按钮时,向数组添加一个属性值对象
   attrParams.attrValueList.push({
     valueName: '',
+    flag: true, //控制每一个属性值编辑模式与查看模式的切换
   })
 }
 //点击保存按钮
@@ -164,6 +179,33 @@ const saveHandle = async () => {
   } else {
     ElMessage.error(`${attrParams.id ? '修改失败' : '添加失败'}`)
   }
+}
+//属性值表单元素失去焦点事件
+const toLook = (row: AttrValue, $index: number) => {
+  //非法情况1(不能为空)
+  if (row.valueName.trim() === '') {
+    //提示信息
+    ElMessage.error('属性值不能为空')
+    attrParams.attrValueList.splice($index, 1)
+    return
+  }
+  //非法情况2(不能重复)
+  let repeat = attrParams.attrValueList.find((item) => {
+    if (item !== row) {
+      return item.valueName === row.valueName
+    }
+  })
+  if (repeat) {
+    //提示信息
+    ElMessage.error('属性值不能重复')
+    //将重复的属性值从数组中删掉
+    attrParams.attrValueList.splice($index, 1)
+    return
+  }
+  row.flag = false
+}
+const toEdit = (row: AttrValue) => {
+  row.flag = true
 }
 </script>
 

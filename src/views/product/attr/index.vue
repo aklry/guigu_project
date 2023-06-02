@@ -79,11 +79,21 @@
                 v-model="row.valueName"
                 v-if="row.flag"
                 @blur="toLook(row, $index)"
+                :ref="(element:any)=>inputArr[$index]=element"
               />
-              <div @click="toEdit(row)" v-else>{{ row.valueName }}</div>
+              <div @click="toEdit(row, $index)" v-else>{{ row.valueName }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="属性值操作"></el-table-column>
+          <el-table-column label="属性值操作">
+            <template #="{ $index }">
+              <el-button
+                type="danger"
+                size="small"
+                icon="Delete"
+                @click="($index:number) => attrParams.attrValueList.splice($index, 1)"
+              />
+            </template>
+          </el-table-column>
         </el-table>
         <el-button
           type="primary"
@@ -99,7 +109,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, reactive } from 'vue'
+import { watch, ref, reactive, nextTick } from 'vue'
 import { categoryStore } from '@/store/modules/category'
 import type {
   AttrResponseData,
@@ -122,6 +132,8 @@ let attrParams = reactive<Attr>({
   categoryId: '', //三级分类的id
   categoryLevel: 3, //代表的是3级分类
 })
+//准备一个数组，存储对应的组件(el-input)实例
+let inputArr = ref<any>([])
 watch(
   () => useCategoryStore.c3Id,
   () => {
@@ -166,6 +178,9 @@ const addAttrValueHandle = () => {
     valueName: '',
     flag: true, //控制每一个属性值编辑模式与查看模式的切换
   })
+  nextTick(() => {
+    inputArr.value[inputArr.value.length - 1].focus()
+  })
 }
 //点击保存按钮
 const saveHandle = async () => {
@@ -204,8 +219,12 @@ const toLook = (row: AttrValue, $index: number) => {
   }
   row.flag = false
 }
-const toEdit = (row: AttrValue) => {
+const toEdit = (row: AttrValue, $index: number) => {
   row.flag = true
+  //nextTick响应式数据发生变化，获取更新后的dom(组件实例)
+  nextTick(() => {
+    inputArr.value[$index].focus()
+  })
 }
 </script>
 
